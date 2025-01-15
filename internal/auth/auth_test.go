@@ -15,7 +15,7 @@ func TestGetAPIKeys(t *testing.T){
 		expectedError	error	
 	}{
 		"NoAuthHeader" : {headers: http.Header{}, expectedKey: "", expectedError: auth.ErrNoAuthHeaderIncluded},
-		"MalformedAuth-NoAPIKeyPrefix": {headers: http.Header{"Authorization": []string{"123Bakr"}}, expectedKey: "1", expectedError: auth.ErrMalformedToken},
+		"MalformedAuth-NoAPIKeyPrefix": {headers: http.Header{"Authorization": []string{"123Bakr"}}, expectedKey: "", expectedError: auth.ErrMalformedToken},
 		"MalformedAuth-MissingToken": {headers: http.Header{"Authorization": []string{"ApiKey"}}, expectedKey: "", expectedError: auth.ErrMalformedToken},
 		"ValidKey": {headers: http.Header{"Authorization": []string{"ApiKey bakr123"}}, expectedKey: "bakr123", expectedError: nil},
 	}
