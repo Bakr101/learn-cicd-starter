@@ -8,6 +8,9 @@ jobs:
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
 
     steps:
       - name: Check out code
@@ -20,3 +23,20 @@ jobs:
 
       - name: Run build script
         run: ./scripts/buildprod.sh
+
+        # Add "id-token" with the intended permissions.
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v2"
+        with:
+          version: ">= 363.0.0"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
+
+      - name: Build Docker Image
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-447911/notely-ar-repo/bakr101/notely:latest .
